@@ -1,4 +1,5 @@
 import 'package:borsauyg/ApiService.dart';
+import 'package:borsauyg/StockModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,27 +17,32 @@ class _StockListViewState extends State<StockListView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FutureBuilder(
+       FutureBuilder(
+        future: _service.getAllStocks(),
+        builder: (context, snapshot) {
+          
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Center(
+                      child:
+                          Text('Bir Hata Oluştu, daha sonra tekrar deneyiniz'));
+                } else {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  } else {
+                    List<Result>? hisselist = snapshot.data!.result;
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                         leading: Text(hisselist![index].price.toString()),
+                        );
+                      },);
+                  }
+                }
+              
+        },
 
-            future: _service.getAllStocks(),
-
-            builder: (context,  snapshot) {
-
-              if (snapshot.hasError || snapshot.data==null) {
-                
-                return Center(child:Text('Veriler Yükleniyor \n Lütfen bekleyiniz');
-
-              } else if (snapshot.hasError) {
-
-                return Icon(Icons.error_outline);
-
-              } else {
-
-                return Center(child: CircularProgressIndicator());
-
-              }
-
-            })
+       )
       ],
     );
 
