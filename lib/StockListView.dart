@@ -16,57 +16,51 @@ class _StockListViewState extends State<StockListView> {
  ApiService _service = ApiService();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-         Flexible(
-           child: FutureBuilder(
-            future: _service.getAllStocks(),
-            builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      print(snapshot.error);
-                      return Center(
-                          child:
-                              Text('Bir Hata Oluştu, daha sonra tekrar deneyiniz'));
-                    } else {
-                      if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+           Flexible(
+             child: FutureBuilder(
+              future: _service.getAllStocks(),
+              builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        print(snapshot.error);
+                        return Center(
+                            child:
+                                Text('Bir Hata Oluştu, daha sonra tekrar deneyiniz'));
                       } else {
-                        List<Result>? hisselist = snapshot.data!.result;
-                        return ListView.builder(
-                          itemCount: hisselist?.length,
-                          itemBuilder: (context,index){
-                          return ListTile(
-                            trailing: Text(hisselist![index].price.toString()),
-                          );
-                 
-                          }
-                        );
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          List<Result>? hisselist = snapshot.data!.result;
+                          return HisselistViewWidget(hisselist: hisselist);
+                        }
                       }
-                    }
-                  },
-                 
-           ),
-         )
-        ],
+                    },
+                   
+             ),
+           )
+          ],
+        ),
       ),
     );
 
   }
 }
 
-class StockListWidget extends StatefulWidget {
-  const StockListWidget({
+class HisselistViewWidget extends StatefulWidget {
+  const HisselistViewWidget({
     super.key,
     required this.hisselist,
   });
 
   final List<Result>? hisselist;
   @override
-  State<StockListWidget> createState() => _StockListWidgetState();
+  State<HisselistViewWidget> createState() => _HisselistViewWidgetState();
 }
 
-class _StockListWidgetState extends State<StockListWidget> {
+class _HisselistViewWidgetState extends State<HisselistViewWidget> {
 
   bool isFiltering=false;
   List<Result>? filteredList;
@@ -79,12 +73,13 @@ class _StockListWidgetState extends State<StockListWidget> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+          
             onChanged: (query){
               if(query.isNotEmpty){
                 isFiltering=true;
 
                 setState(() {
-                  filteredList = fullList?.where((book ) => book.name!.toLowerCase().contains(query.toLowerCase())).toList();
+                filteredList = fullList?.where((book ) => book.name!.toLowerCase().contains(query.toLowerCase())).toList();
                 });
 
               }
@@ -96,10 +91,11 @@ class _StockListWidgetState extends State<StockListWidget> {
               }
             },
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              hintText: 'Hisse Adı Yazınız.',
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
 
-            ),),
+          ),),
         ),
         Flexible(
             child: ListView.builder(
@@ -108,19 +104,64 @@ class _StockListWidgetState extends State<StockListWidget> {
 
                   var kontrollerList= isFiltering ? filteredList : fullList;
 
-                  
+                  return Slidable(
+                    endActionPane:  ActionPane(
+                      motion: ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          backgroundColor: Color(0xFF7BC043),
+                          foregroundColor: Colors.white,
+                          icon: Icons.edit,
+                          label: 'Edit',
+                          onPressed: (_) {
+                            
+                          },
+                        ),
+                        SlidableAction(
+                          onPressed: (_){},
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        ),
+                      ],
+                    ),
                     child: Card(
 
                       child: ListTile(
                         //title: Text('harun'),
-                        leading: Text(fullList![index].name ?? 'harun'),
+                        leading: Text(kontrollerList![index].name ?? 'harun'),
 
                       ),
-                    
+                    ),
                   );
 
+                  /*Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (_) async {
+                        await Provider.of<BooksViewModel>(context, listen: false)
+                            .deleteBook(kitaplist[index]);
+                      },
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                        color: Colors.redAccent,
+                      ),
+                      child: Card(
+                        child: ListTile(
+                          //title: Text('harun'),
+                          leading: Text(kitaplist![index].authorName ?? 'harun'),
+                          trailing: IconButton(icon: Icon(Icons.edit) , onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateBookView(kitaplist[index])));
 
-
+                          },),
+                        ),
+                      ))*/
+                  ;
                 })),
       ],
     ));
