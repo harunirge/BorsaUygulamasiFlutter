@@ -9,8 +9,6 @@ class ApiService{
 
 
 
-
-
     final response = await http.get(
 
         Uri.parse('https://api.collectapi.com/economy/liveBorsa'),

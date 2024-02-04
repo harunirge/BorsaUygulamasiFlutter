@@ -2,6 +2,7 @@ import 'package:borsauyg/ApiService.dart';
 import 'package:borsauyg/StockModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class StockListView extends StatefulWidget {
   const StockListView({super.key});
@@ -15,35 +16,40 @@ class _StockListViewState extends State<StockListView> {
  ApiService _service = ApiService();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-       FutureBuilder(
-        future: _service.getAllStocks(),
-        builder: (context, snapshot) {
-          
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return Center(
-                      child:
-                          Text('Bir Hata Oluştu, daha sonra tekrar deneyiniz'));
-                } else {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  } else {
-                    List<Result>? hisselist = snapshot.data!.result;
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                         leading: Text(hisselist![index].price.toString()),
+    return Scaffold(
+      body: Column(
+        children: [
+         Flexible(
+           child: FutureBuilder(
+            future: _service.getAllStocks(),
+            builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      print(snapshot.error);
+                      return Center(
+                          child:
+                              Text('Bir Hata Oluştu, daha sonra tekrar deneyiniz'));
+                    } else {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        List<Result>? hisselist = snapshot.data!.result;
+                        return ListView.builder(
+                          itemCount: hisselist?.length,
+                          itemBuilder: (context,index){
+                          return ListTile(
+                            trailing: Text(hisselist![index].price.toString()),
+                          );
+                 
+                          }
                         );
-                      },);
-                  }
-                }
-              
-        },
-
-       )
-      ],
+                      }
+                    }
+                  },
+                 
+           ),
+         )
+        ],
+      ),
     );
 
   }
@@ -52,10 +58,10 @@ class _StockListViewState extends State<StockListView> {
 class StockListWidget extends StatefulWidget {
   const StockListWidget({
     super.key,
-    required this.kitaplist,
+    required this.hisselist,
   });
 
-  final List<Book>? kitaplist;
+  final List<Result>? hisselist;
   @override
   State<StockListWidget> createState() => _StockListWidgetState();
 }
@@ -63,11 +69,11 @@ class StockListWidget extends StatefulWidget {
 class _StockListWidgetState extends State<StockListWidget> {
 
   bool isFiltering=false;
-  List<Book>? filteredList;
+  List<Result>? filteredList;
 
   @override
   Widget build(BuildContext context) {
-    var fullList = widget.kitaplist;
+    var fullList = widget.hisselist;
     return Flexible(child: Column(
       children: [
         Padding(
@@ -78,7 +84,7 @@ class _StockListWidgetState extends State<StockListWidget> {
                 isFiltering=true;
 
                 setState(() {
-                  filteredList = fullList?.where((book ) => book.bookName.toLowerCase().contains(query.toLowerCase())).toList();
+                  filteredList = fullList?.where((book ) => book.name!.toLowerCase().contains(query.toLowerCase())).toList();
                 });
 
               }
@@ -102,39 +108,15 @@ class _StockListWidgetState extends State<StockListWidget> {
 
                   var kontrollerList= isFiltering ? filteredList : fullList;
 
-                  return Slidable(
-                    endActionPane:  ActionPane(
-                      motion: ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          backgroundColor: Color(0xFF7BC043),
-                          foregroundColor: Colors.white,
-                          icon: Icons.edit,
-                          label: 'Edit',
-                          onPressed: (_) {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateBookView(kontrollerList![index])));
-                          },
-                        ),
-                        SlidableAction(
-                          onPressed: (_)async {
-                            await Provider.of<BooksViewModel>(context, listen: false)
-                                .deleteBook(kontrollerList![index]);
-                          },
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                      ],
-                    ),
+                  
                     child: Card(
 
                       child: ListTile(
                         //title: Text('harun'),
-                        leading: Text(kontrollerList![index].authorName ?? 'harun'),
+                        leading: Text(fullList![index].name ?? 'harun'),
 
                       ),
-                    ),
+                    
                   );
 
 
