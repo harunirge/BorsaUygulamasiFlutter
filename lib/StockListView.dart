@@ -23,34 +23,8 @@ class _StockListViewState extends State<StockListView> {
             builder: (context,  snapshot) {
 
               if (snapshot.hasError || snapshot.data==null) {
-                var resultList = snapshot.data?.result;
-                return Flexible(
-                  child: ListView.builder(itemBuilder: (BuildContext context, int index) {
-                  
-                    return Card(child: ListTile(
-                  
-                      trailing: Column(
-                  
-                        mainAxisAlignment: MainAxisAlignment.center,
-                  
-                        children: [
-                  
-                          Text(resultList![index].name.toString()),
-                  
-                  
-                  
-                        ],
-                  
-                      ),
-                  
-                  
-                  
-                  
-                  
-                    ));
-                  
-                  },),
-                );
+                
+                return Center(child:Text('Veriler Yükleniyor \n Lütfen bekleyiniz');
 
               } else if (snapshot.hasError) {
 
