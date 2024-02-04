@@ -35,7 +35,7 @@ class _StockListViewState extends State<StockListView> {
                   
                         children: [
                   
-                          Text(resultList![index].price.toString()),
+                          Text(resultList![index].name.toString()),
                   
                   
                   
