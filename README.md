@@ -1,6 +1,7 @@
 # borsauygulamasiflutter
 
-A new Flutter project.
+Yaklaşık 600 kadar Hisse senedi verisinin çekildiği 
+ve istediğimiz hisse senetlerini favori listemize ekleyip arayüzde takip edebildiğimiz bir mobil app. 
 
 ## Getting Started
 
