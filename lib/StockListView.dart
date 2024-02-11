@@ -136,8 +136,9 @@ FirebaseFirestore database = FirebaseFirestore.instance;
                       ],
                     ),
                     child: Card(
-
+                      color: (index % 2 == 0) ? Colors.grey.shade300 : Colors.grey.shade200,
                       child: ListTile(
+                        
                         //title: Text('harun'),
                         leading: Text(kontrollerList![index].name.toString()),
                         trailing:Text(kontrollerList[index].price.toString()),
