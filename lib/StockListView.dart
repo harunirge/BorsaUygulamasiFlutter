@@ -75,7 +75,7 @@ FirebaseFirestore database = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     final CollectionReference favoriteListRef = database.collection('favoritelist');
-    Map<String,dynamic> eklenecekHisse = {'ad':'harun','soyad':'irge'};
+    
     var fullList = widget.hisselist;
     return Flexible(child: Column(
       children: [

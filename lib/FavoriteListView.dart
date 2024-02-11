@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +11,36 @@ class FavoriteListView extends StatefulWidget {
 }
 
 class _FavoriteListViewState extends State<FavoriteListView> {
+  
+  FirebaseFirestore database = FirebaseFirestore.instance;
+  
   @override
   Widget build(BuildContext context) {
+    var favoriteListRef = database.collection('favoritelist');
     return Scaffold(
       body: Column(children: [
-        FutureBuilder(
-          future: null, 
-          builder: (context,snapshot){
-            return Text('harun');
-          } ) 
+        Flexible(
+          child: FutureBuilder(
+            future: favoriteListRef.get(), 
+            builder: (context,snapshot){
+              if (snapshot.hasData){
+                var abc = snapshot.data?.docs;
+             
+              return ListView.builder(
+                itemCount: abc?.length,
+                itemBuilder: (context,index){
+                  return ListTile(
+                    trailing: Text(abc![index].data()['currency'].toString()),
+                  ); 
+                }
+                );
+              }
+              else {
+                return CircularProgressIndicator();
+              }
+              
+            } ),
+        ) 
 
       ]),
       floatingActionButton: FloatingActionButton(onPressed: () {

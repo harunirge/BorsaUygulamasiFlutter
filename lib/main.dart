@@ -1,4 +1,5 @@
 
+import 'package:borsauyg/FavoriteListView.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Borsa API',
-      home: StockListView(),
+      home: FavoriteListView(),
     );
   }
 }
