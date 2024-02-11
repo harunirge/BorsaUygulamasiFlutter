@@ -1,14 +1,19 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 import 'StockModel.dart';
 
 class DataBaseService{
 
+  FirebaseFirestore _database = FirebaseFirestore.instance;
+
+  
+
+  
+
 
   Future<LiveStockModel?> getAllStocks()async{
-
-
-
     final response = await http.get(
 
         Uri.parse('https://api.collectapi.com/economy/liveBorsa'),
@@ -33,7 +38,14 @@ class DataBaseService{
 
       print('hata');
 
-    }}}
+    }
+    }
+
+
+
+
+
+    }
 
 
 
