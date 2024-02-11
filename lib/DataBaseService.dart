@@ -8,7 +8,7 @@ class DataBaseService{
 
   FirebaseFirestore _database = FirebaseFirestore.instance;
 
-  
+
 
   
 
@@ -41,11 +41,44 @@ class DataBaseService{
     }
     }
 
+Future<List<Result>?> takeFavoriteListAndReturn(List<Result> x )async{
+    final response = await http.get(
+
+        Uri.parse('https://api.collectapi.com/economy/liveBorsa'),
+
+        headers: {
+
+          'authorization' : 'apikey 69YLfupH6pvWQMD7r1uO2n:5jZyOC1Un8OpWa16HWypA4',
+
+          'content-type': 'application/json'
+
+        }
+
+    );
+
+    if(response.statusCode==200){
+
+      
+
+
+    x.forEach((element) {element.name})
+
+
+     
+
+    }else{
+
+      print('hata');
+
+    }
+    }
 
 
 
 
     }
+
+    
 
 
 

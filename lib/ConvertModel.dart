@@ -1,4 +1,4 @@
-class ConvertModel {
+/* class ConvertModel {
   bool? success;
   Resultt? result;
 
@@ -75,4 +75,4 @@ class Data {
     data['calculated'] = this.calculated;
     return data;
   }
-}
+} */
