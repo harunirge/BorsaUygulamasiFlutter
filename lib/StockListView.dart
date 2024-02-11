@@ -1,5 +1,6 @@
 import 'package:borsauyg/ApiService.dart';
 import 'package:borsauyg/StockModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -14,8 +15,11 @@ class StockListView extends StatefulWidget {
 class _StockListViewState extends State<StockListView> {
 
  ApiService _service = ApiService();
+ 
+ 
   @override
   Widget build(BuildContext context) {
+    
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -61,12 +65,17 @@ class HisselistViewWidget extends StatefulWidget {
 }
 
 class _HisselistViewWidgetState extends State<HisselistViewWidget> {
-
+FirebaseFirestore database = FirebaseFirestore.instance;
+    
   bool isFiltering=false;
   List<Result>? filteredList;
+  List<Result>? favoriteList;
+  
 
   @override
   Widget build(BuildContext context) {
+    final CollectionReference favoriteListRef = database.collection('favoritelist');
+    Map<String,dynamic> eklenecekHisse = {'ad':'harun','soyad':'irge'};
     var fullList = widget.hisselist;
     return Flexible(child: Column(
       children: [
@@ -130,7 +139,11 @@ class _HisselistViewWidgetState extends State<HisselistViewWidget> {
 
                       child: ListTile(
                         //title: Text('harun'),
-                        leading: Text(kontrollerList![index].name ?? 'harun'),
+                        leading: Text(kontrollerList![index].name.toString()),
+                        trailing:Text(kontrollerList[index].price.toString()),
+                        onTap: () {
+                          favoriteListRef.doc(kontrollerList[index].name).set(kontrollerList[index].toJson());
+                        },
 
                       ),
                     ),
@@ -161,7 +174,7 @@ class _HisselistViewWidgetState extends State<HisselistViewWidget> {
                           },),
                         ),
                       ))*/
-                  ;
+                  
                 })),
       ],
     ));
