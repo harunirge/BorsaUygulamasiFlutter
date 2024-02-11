@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'StockModel.dart';
 
-class ApiService{
+class DataBaseService{
 
 
   Future<LiveStockModel?> getAllStocks()async{

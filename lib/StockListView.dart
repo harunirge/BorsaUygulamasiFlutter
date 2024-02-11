@@ -14,7 +14,7 @@ class StockListView extends StatefulWidget {
 
 class _StockListViewState extends State<StockListView> {
 
- ApiService _service = ApiService();
+ DataBaseService _service = DataBaseService();
  
  
   @override
@@ -136,7 +136,7 @@ FirebaseFirestore database = FirebaseFirestore.instance;
                       ],
                     ),
                     child: Card(
-                      color: (index % 2 == 0) ? Colors.grey.shade300 : Colors.grey.shade200,
+                      color: (index % 2 == 0) ? Colors.grey.shade100 : Colors.grey.shade50,
                       child: ListTile(
                         
                         //title: Text('harun'),
