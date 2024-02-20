@@ -58,10 +58,20 @@ Future<List<Result>?> takeFavoriteListAndReturn(List<Result> x )async{
 
     if(response.statusCode==200){
 
-      
+    var resBody = LiveStockModel.fromJson(json.decode(response.body));
+    List<Result> favList = []; 
+
+    for(int i = 0; i==x.length; i++){
+      for(int y=0; y==resBody.result!.length ; y++ ){
+       if(resBody.result![y].name == x[i].name ){
+        favList.add(resBody.result![y]);
+       } 
+      }
+    }
+     
 
 
-    x.forEach((element) {element.name})
+   
 
 
      
