@@ -1,4 +1,6 @@
 
+import 'package:borsauyg/DataBaseService.dart';
+import 'package:borsauyg/StockModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,32 +14,37 @@ class FavoriteListView extends StatefulWidget {
 
 class _FavoriteListViewState extends State<FavoriteListView> {
   
-  FirebaseFirestore database = FirebaseFirestore.instance;
+
+  
+  
+  
   
   @override
   Widget build(BuildContext context) {
-    var favoriteListRef = database.collection('favoritelist');
+    var dbService = DataBaseService();
+   
+    DataBaseService database  = DataBaseService();
     return Scaffold(
       body: Column(children: [
         Flexible(
-          child: FutureBuilder(
-            future: favoriteListRef.get(), 
+          child: StreamBuilder(
+            stream: database.getStockList(),
             builder: (context,snapshot){
-              if (snapshot.hasData){
-                var abc = snapshot.data?.docs;
-             
-              return ListView.builder(
-                itemCount: abc?.length,
+              if (snapshot.hasError){
+                return Center(child: Text('Bir hata oluştu'),);
+              }else{
+                List<Result>? resultList = snapshot.data;
+                return ListView.builder(
+                itemCount: resultList?.length,
                 itemBuilder: (context,index){
                   return ListTile(
-                    trailing: Text(abc![index].data()['currency'].toString()),
+                    title:Text( resultList![index].price.toString()),
                   ); 
                 }
                 );
+              
               }
-              else {
-                return CircularProgressIndicator();
-              }
+             
               
             } ),
         ) 

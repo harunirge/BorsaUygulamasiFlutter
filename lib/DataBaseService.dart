@@ -6,8 +6,8 @@ import 'StockModel.dart';
 
 class DataBaseService{
 
-  FirebaseFirestore _database = FirebaseFirestore.instance;
-
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+String listRef = "favoritelist";
 
 
   
@@ -61,12 +61,14 @@ Future<List<Result>?> takeFavoriteListAndReturn(List<Result> x )async{
     var resBody = LiveStockModel.fromJson(json.decode(response.body));
     List<Result> favList = []; 
 
-    for(int i = 0; i==x.length; i++){
+    // ignore: dead_code
+    for(var i = 0; i<= x.length; i++ ){
       for(int y=0; y==resBody.result!.length ; y++ ){
        if(resBody.result![y].name == x[i].name ){
         favList.add(resBody.result![y]);
        } 
       }
+      return favList;
     }
      
 
@@ -84,11 +86,36 @@ Future<List<Result>?> takeFavoriteListAndReturn(List<Result> x )async{
     }
 
 
+  
+
+
+
+Stream<QuerySnapshot> getCollectionFromFireStore(String referencePath) {
+    return _firestore.collection(referencePath).snapshots();
+  }
+
+
+
+
+Stream<List<Result>> getStockList() {
+
+
+    return getCollectionFromFireStore(listRef).map((querySnapshot) =>
+        querySnapshot.docs
+            .map((doc) => Result.fromJson(doc.data() as Map<String, dynamic>))
+            .toList());
+  }
+
 
 
     }
 
-    
+
+
+
+
+
+
 
 
 
