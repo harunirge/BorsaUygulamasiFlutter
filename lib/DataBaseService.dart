@@ -76,7 +76,7 @@ Future<List<Result>?> takeFavoriteListAndReturn(List<Result> x )async{
    
 
 
-     
+      
 
     }else{
 
@@ -97,7 +97,7 @@ Stream<QuerySnapshot> getCollectionFromFireStore(String referencePath) {
 
 
 
-Stream<List<Result>> getStockList() {
+Future<List<Result>> getStockList() {
 
 
     return getCollectionFromFireStore(listRef).map((querySnapshot) =>

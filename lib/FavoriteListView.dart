@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:borsauyg/DataBaseService.dart';
 import 'package:borsauyg/StockModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,15 +16,26 @@ class FavoriteListView extends StatefulWidget {
 
 class _FavoriteListViewState extends State<FavoriteListView> {
   
+var dbService = DataBaseService();
 
-  
-  
+List<Result> resultum = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dbService.getStockList();
+    dbService.getAllStocks()
+  }
   
   
   @override
   Widget build(BuildContext context) {
     var dbService = DataBaseService();
    
+  
+    
+    
     DataBaseService database  = DataBaseService();
     return Scaffold(
       body: Column(children: [
@@ -30,10 +43,12 @@ class _FavoriteListViewState extends State<FavoriteListView> {
           child: StreamBuilder(
             stream: database.getStockList(),
             builder: (context,snapshot){
-              if (snapshot.hasError){
-                return Center(child: Text('Bir hata oluştu'),);
+              if (!snapshot.hasData){
+                return Center(child: Column(children: [CircularProgressIndicator(),Text('Lütfen Bekleyiniz')]),);
               }else{
                 List<Result>? resultList = snapshot.data;
+                var lastList = dbService.takeFavoriteListAndReturn(resultList!);
+               
                 return ListView.builder(
                 itemCount: resultList?.length,
                 itemBuilder: (context,index){
@@ -50,7 +65,11 @@ class _FavoriteListViewState extends State<FavoriteListView> {
         ) 
 
       ]),
-      floatingActionButton: FloatingActionButton(onPressed: () {
+      floatingActionButton: FloatingActionButton(
+        
+        child: Text('Hisse Ekle'),
+        
+        onPressed: () {
         
       },),
     );
